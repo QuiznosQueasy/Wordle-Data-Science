@@ -1,0 +1,192 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+import java.util.Random;
+import java.util.ArrayList;
+import java.util.List;
+
+public class naive1_2{
+  public static void main (String[] args)throws FileNotFoundException
+  {
+//variables
+    File wordleSolutions = new File("solutionNYT.txt");
+    File wordleWords = new File("wordleNYT.txt");
+    int arrayLength = 0;
+    int randomWord = 0;
+    int count = 0;
+    String randomSolutionWord = "";
+    int guessCount = 1;
+    ArrayList<String> potentialWrdLst = new ArrayList<String>();
+    Random rand = new Random();
+    int upperBound = 12947;
+    int randomUpperBound = 0;
+    int solutionNum = 0;
+    //System.out.println(solutionNum);
+    String guess = "";
+    String firstGuess = "";
+    String guessWord = "";
+    String word = "";
+    int randomDict = 0;
+    int newCount = 0;
+    String wordGrab = "";
+    int newRandInt = 0;
+    String newRandStr = "";
+    double numOfSixes = 0;
+    double percentSix = 0;
+    double numOfRuns = 10000;
+    double intRandCount = 0;
+    double percentRands = 0;
+    double randCounter = 0;
+    double percentCounter = 0;
+
+    //read words file and generate random word
+
+    for(int p = 0; p < numOfRuns; p++)
+    {
+
+    Scanner solutionWordScn = new Scanner(wordleSolutions);
+    randomUpperBound = 2309;
+    solutionNum = rand.nextInt(randomUpperBound);
+    while(solutionWordScn.hasNext() && count <= solutionNum)
+    {
+      count++;
+      randomSolutionWord = solutionWordScn.next();
+    }
+    randomSolutionWord = randomSolutionWord.substring(1,6);
+    System.out.println("random word solution word is: " + randomSolutionWord);
+    count = 0;
+    //end
+
+
+    //take random first guess
+    Scanner readWordleGuess = new Scanner(wordleWords);
+    int guessNum = rand.nextInt(upperBound);
+    //System.out.println(guessNum);
+    while(readWordleGuess.hasNext() && count <= guessNum)
+    {
+      count++;
+      firstGuess = readWordleGuess.next();
+    }
+
+    firstGuess = firstGuess.substring(0,5);
+    System.out.println("first guess is: " + firstGuess);
+    count = 0;
+    //end
+
+    //firstGuess = "raise";
+    System.out.println("firstGuess is: " + firstGuess);
+
+    //create string with every word
+    Scanner grabAllWords = new Scanner(wordleWords);
+    while(grabAllWords.hasNext())
+    {
+      count++;
+      wordGrab = grabAllWords.next();
+      wordGrab = wordGrab.substring(0,5);
+      potentialWrdLst.add(wordGrab);
+    }
+    count = 0;
+    //System.out.println("length of word list is: " + potentialWrdLst.size());
+      //end
+//loop until we guess word matches solution word
+    while(randomSolutionWord.equals(firstGuess) == false)
+    {
+      guessCount++;//count how many time loop runs
+      //iterate through every possible letter position
+
+      //remove gray letters
+    for(int i = 0; i <= 4; i++){
+
+      char grayChar = firstGuess.charAt(i);
+      String grayStr = "" + grayChar;
+      if( randomSolutionWord.contains(grayStr) == false )
+      {
+        for(int q = 0; q < potentialWrdLst.size(); q++)
+        {
+          if(potentialWrdLst.get(q).contains(grayStr))
+            potentialWrdLst.remove(q);
+        }
+      }
+    }
+
+    for(int j = 0; j <= 4; j++)
+    {
+    for(int i = 0; i <= 4; i++)
+    {
+      //finds yellow chars algorithm
+        if( (randomSolutionWord.charAt(j) == firstGuess.charAt(i)) && (i != j) )
+        {
+          char yellowChar = firstGuess.charAt(i);
+          String yellowStr = "" + yellowChar;
+
+          for(int q = 0; q < potentialWrdLst.size(); q++)
+          {
+            if(  (potentialWrdLst.get(q).contains(yellowStr) ||
+            potentialWrdLst.get(q).indexOf(yellowStr) == i ) == false )
+            {
+              potentialWrdLst.remove(q);
+            }
+          }
+        }
+      //finds green chars algorithm
+        if(randomSolutionWord.charAt(i)==firstGuess.charAt(i))
+        {
+          char greenChar = randomSolutionWord.charAt(i);
+          String greenStr = "" + greenChar;
+          for(int k = 0; k < potentialWrdLst.size(); k++)
+          {
+            if( ( (potentialWrdLst.get(k).contains(greenStr)) &&
+            (potentialWrdLst.get(k).indexOf(greenStr) == randomSolutionWord.indexOf(greenStr)))
+              == false )
+            {
+              potentialWrdLst.remove(k);
+            }
+          }
+        }
+    }
+    }
+    //end of algorithm
+    //generate random number
+    newRandInt = rand.nextInt(potentialWrdLst.size());
+    newRandStr = potentialWrdLst.get(newRandInt);
+    System.out.println("random number is: " + newRandInt);
+    //if randomword equals previous guess pick another random word
+    while(newRandStr == firstGuess)
+    {
+      newRandInt = rand.nextInt(potentialWrdLst.size());
+      newRandStr = potentialWrdLst.get(newRandInt);
+    }
+    System.out.println("next guess is: " + newRandStr);
+
+    firstGuess = newRandStr;
+    //removes guess from list, so the random doesn't pick it again
+      for(int l = 0; l < potentialWrdLst.size(); l++)
+      {
+        if(potentialWrdLst.get(l).equals(firstGuess))
+        {
+          potentialWrdLst.remove(l);
+        }
+      }
+    }
+    //print number of algorithm runs it took to solve the wordle simulation
+    System.out.println("wordle solved in " + guessCount + " guesses!!!!!!");
+    if(guessCount <= 6)
+    {
+      numOfSixes++;
+      percentSix = (numOfSixes/numOfRuns) * 100;
+      intRandCount += newRandInt;
+      randCounter++;
+      percentRands = (intRandCount/randCounter);
+
+    }
+    System.out.println("num of runs less than or equal to six: " + numOfSixes);
+    System.out.println("percent of runs less than or equal to six: " + percentSix);
+    guessCount = 1;
+
+    System.out.println("random number average: " + percentRands);
+    System.out.println("randCounter: " + randCounter);
+    System.out.println("intRandCount: " + intRandCount);
+  }
+
+    }
+    }
