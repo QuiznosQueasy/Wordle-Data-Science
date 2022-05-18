@@ -1,49 +1,90 @@
+//@Latherial Calbert
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 import java.util.Random;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Arrays;
+import java.util.*;
 
-public class naive1_2{
+
+
+public class wordle{
   public static void main (String[] args)throws FileNotFoundException
   {
-//variables
+    //variables sorted by types
+
     File wordleSolutions = new File("solutionNYT.txt");
-    File wordleWords = new File("wordleNYT.txt");
+    File wordleWords = new File("solutionNYT.txt");
+//wordleNYT.txt
+    ArrayList<String> potentialWrdLst = new ArrayList<String>();
+    ArrayList<Integer> tempWrdLst = new ArrayList<Integer>();
+    ArrayList<Integer> tempWrdLst1 = new ArrayList<Integer>();
+    ArrayList<Integer> tempWrdLst2 = new ArrayList<Integer>();
+    ArrayList<Integer> tempWrdLst3 = new ArrayList<Integer>();
+    ArrayList<Integer> tempWrdLst4 = new ArrayList<Integer>();
+    ArrayList<String> winningWords = new ArrayList<String>();
+
     int arrayLength = 0;
     int randomWord = 0;
     int count = 0;
-    String randomSolutionWord = "";
-    int guessCount = 1;
-    ArrayList<String> potentialWrdLst = new ArrayList<String>();
-    Random rand = new Random();
-    int upperBound = 12947;
+    //int upperBound = 12947;
+    int upperBound = 2309;
+
     int randomUpperBound = 0;
     int solutionNum = 0;
-    //System.out.println(solutionNum);
-    String guess = "";
-    String firstGuess = "";
-    String guessWord = "";
-    String word = "";
+    int guessCount = 0;
+    int zero = 0;
+    int one = 0;
+    int two = 0;
+    int three = 0;
+    int four = 0;
     int randomDict = 0;
     int newCount = 0;
-    String wordGrab = "";
     int newRandInt = 0;
+    int potentialWrdCount = 0;
+
+
+    String randomSolutionWord = "";
+    String guess = "";
+    String firstGuess = "     ";
+    String guessWord = "";
+    String word = "";
+    String wordGrab = "";
     String newRandStr = "";
+    String guessString = "";
+    String testGuess = "";
+
+    //TODO::!!!! (UPdate tempguess at some point in while loop)
+    String tempGuess = "";
+    String tempGuess2 = "";
+    char zeroL;
+    char oneL;
+    char twoL;
+    char threeL;
+    char fourL;
+
+    Random rand = new Random();
+
     double numOfSixes = 0;
+    double normCount = 0;
     double percentSix = 0;
-    double numOfRuns = 10000;
+    double numOfRuns = 2000;
     double intRandCount = 0;
     double percentRands = 0;
     double randCounter = 0;
     double percentCounter = 0;
+    double avgGuessCount = 0;
+    double numerator = 0;
+    double denominator = 0;
+    double cosVal = 0;
+    double maxVal = -2;
 
     //read words file and generate random word
-
     for(int p = 0; p < numOfRuns; p++)
-    {
-
+  {
+    normCount++;
     Scanner solutionWordScn = new Scanner(wordleSolutions);
     randomUpperBound = 2309;
     solutionNum = rand.nextInt(randomUpperBound);
@@ -56,9 +97,10 @@ public class naive1_2{
     System.out.println("random word solution word is: " + randomSolutionWord);
     count = 0;
     //end
-
-
+    firstGuess = "     ";
+    //System.out.println("first gues is : " + firstGuess);
     //take random first guess
+    /*
     Scanner readWordleGuess = new Scanner(wordleWords);
     int guessNum = rand.nextInt(upperBound);
     //System.out.println(guessNum);
@@ -71,10 +113,11 @@ public class naive1_2{
     firstGuess = firstGuess.substring(0,5);
     System.out.println("first guess is: " + firstGuess);
     count = 0;
+    */
     //end
 
     //firstGuess = "raise";
-    System.out.println("firstGuess is: " + firstGuess);
+    //firstGuess = "sards";
 
     //create string with every word
     Scanner grabAllWords = new Scanner(wordleWords);
@@ -82,19 +125,28 @@ public class naive1_2{
     {
       count++;
       wordGrab = grabAllWords.next();
-      wordGrab = wordGrab.substring(0,5);
+      wordGrab = wordGrab.substring(1,6);
+
+      //TODO Change above from 0 to 5 when you switch files
       potentialWrdLst.add(wordGrab);
     }
     count = 0;
     //System.out.println("length of word list is: " + potentialWrdLst.size());
-      //end
-//loop until we guess word matches solution word
+    //end
+
+    //loop until we guess word matches solution word
     while(randomSolutionWord.equals(firstGuess) == false)
     {
       guessCount++;//count how many time loop runs
       //iterate through every possible letter position
 
       //remove gray letters
+  //  if(guessCount != 1 )
+  //  {
+
+
+
+//System.out.println("firstGuess is: " + firstGuess);
     for(int i = 0; i <= 4; i++){
 
       char grayChar = firstGuess.charAt(i);
@@ -105,6 +157,7 @@ public class naive1_2{
         {
           if(potentialWrdLst.get(q).contains(grayStr))
             potentialWrdLst.remove(q);
+            //System.out.println("we removed: " + potentialWrdLst.remove(q));
         }
       }
     }
@@ -125,6 +178,7 @@ public class naive1_2{
             potentialWrdLst.get(q).indexOf(yellowStr) == i ) == false )
             {
               potentialWrdLst.remove(q);
+              //System.out.println("we removed: " + potentialWrdLst.remove(q));
             }
           }
         }
@@ -140,18 +194,355 @@ public class naive1_2{
               == false )
             {
               potentialWrdLst.remove(k);
+              //System.out.println("we removed: " + potentialWrdLst.remove(k));
             }
           }
         }
     }
     }
+
+
+
+  //}
     //end of algorithm
+
+    //go through potentialWrdLst to find most frequent letters
+
+    //while(guessString != tempGuess){
+
+    for(int k = 0; k < potentialWrdLst.size(); k++)
+    {
+      //int pos;
+      int letterNum = 'z';
+      char letterChar = 'z';
+
+      int letterNum1;
+      char letterChar1;
+
+      int letterNum2;
+      char letterChar2;
+
+      int letterNum3;
+      char letterChar3;
+
+      int letterNum4;
+      char letterChar4;
+
+      String everyWord;
+      everyWord = potentialWrdLst.get(k);
+      int n;
+
+      //create string for every word and
+      //iterate through the length of every word
+      for(int i = 0; i < everyWord.length(); i++)
+      {
+      //  for(int j = 0; j < arr.length; j++)
+      //  {
+
+      //if statement to store letters for each position
+      //add letter to number conversion to 5 separate lists for
+      //each position
+        if(i == 0)
+        {
+        letterChar = everyWord.charAt(i);
+        letterNum = letterChar;
+        //System.out.println(letterNum);
+        tempWrdLst.add(letterNum);
+
+          //Collections.sort(tempWrdLst);
+          //System.out.print(tempWrdLst.get(q));
+
+        }
+
+        if(i == 1)
+        {
+        letterChar1 = everyWord.charAt(i);
+        letterNum1 = letterChar1;
+        //System.out.println(letterNum);
+        tempWrdLst1.add(letterNum1);
+
+          //Collections.sort(tempWrdLst1);
+          //System.out.print(tempWrdLst.get(q));
+
+        }
+
+        if(i == 2)
+        {
+        letterChar2 = everyWord.charAt(i);
+        letterNum2 = letterChar2;
+        //System.out.println(letterNum);
+        tempWrdLst2.add(letterNum2);
+
+          //Collections.sort(tempWrdLst2);
+          //System.out.print(tempWrdLst.get(q));
+
+        }
+
+        if(i == 3)
+        {
+        letterChar3 = everyWord.charAt(i);
+        letterNum3 = letterChar3;
+        //System.out.println(letterNum);
+        tempWrdLst3.add(letterNum);
+
+          //Collections.sort(tempWrdLst3);
+          //System.out.print(tempWrdLst.get(q));
+
+        }
+
+        if(i == 4)
+        {
+        letterChar4 = everyWord.charAt(i);
+        letterNum4 = letterChar4;
+        //System.out.println(letterNum);
+        tempWrdLst4.add(letterNum);
+
+          //Collections.sort(tempWrdLst4);
+          //System.out.print(tempWrdLst.get(q));
+
+        }
+
+      }
+    }
+
+    //System.out.println("mode is: " + getMode(tempWrdLst));
+    //find most common number in each position
+    zero = getMode(tempWrdLst);
+    one = getMode(tempWrdLst1);
+    two = getMode(tempWrdLst2);
+    three = getMode(tempWrdLst3);
+    four = getMode(tempWrdLst4);
+
+    //remove most common numbers from the list
+    tempWrdLst.removeAll(Arrays.asList(zero));
+    tempWrdLst1.removeAll(Arrays.asList(one));
+    tempWrdLst2.removeAll(Arrays.asList(two));
+    tempWrdLst3.removeAll(Arrays.asList(three));
+    tempWrdLst4.removeAll(Arrays.asList(four));
+
+    tempWrdLst.clear();
+    tempWrdLst1.clear();
+    tempWrdLst2.clear();
+    tempWrdLst3.clear();
+    tempWrdLst4.clear();
+
+    //convert every number to a letter character
+    zeroL = (char) zero;
+    oneL = (char) one;
+    twoL = (char) two;
+    threeL = (char) three;
+    fourL = (char) four;
+
+
+    //char to String
+    String zeroC = "" + zeroL;
+    String oneC = "" + oneL;
+    String twoC = "" + twoL;
+    String threeC = "" + threeL;
+    String fourC = "" + fourL;
+    //construct our most frequent letter/word guess
+    guessString = "" + zeroL + oneL + twoL + threeL + fourL;
+    System.out.println("frequent word is: " + guessString);
+
+    //create a vector from the most frequent letter-combination word
+    int [] vectorA = new int[5];
+
+    //input the values
+    vectorA[0] = zero;
+    vectorA[1] = one;
+    vectorA[2] = two;
+    vectorA[3] = three;
+    vectorA[4] = four;
+
+    //find the length of the vector
+    double vectorAlength = Math.sqrt( Math.pow(vectorA[0],2) +
+    Math.pow(vectorA[1],2) + Math.pow(vectorA[2],2) +
+    Math.pow(vectorA[3],2) + Math.pow(vectorA[4],2));
+
+/*&& tempGuess.contains(oneL)*/
+    //compare next two guessStrings for similarity
+
+    //TODO (try different if comparison statements or something)
+
+      if( (tempGuess == guessString))
+    {
+      zero = getMode(tempWrdLst);
+      one = getMode(tempWrdLst1);
+      two = getMode(tempWrdLst2);
+      three = getMode(tempWrdLst3);
+      four = getMode(tempWrdLst4);
+
+      tempWrdLst.clear();
+      tempWrdLst1.clear();
+      tempWrdLst2.clear();
+      tempWrdLst3.clear();
+      tempWrdLst4.clear();
+
+      zeroL = (char) zero;
+      oneL = (char) one;
+      twoL = (char) two;
+      threeL = (char) three;
+      fourL = (char) four;
+
+      guessString = "" + zeroL + oneL + twoL + threeL + fourL;
+    }
+    tempGuess = guessString;
+
+
+
+
+
+
+
+    //firstGuess = guessString;
+    //firstGuess = guessString;
+
+    //find cosine similarity of all words & put in List
+    ArrayList<Integer> newArr = new ArrayList<Integer>();
+    //storeAllArray.add(newArr);
+    for(int i = 0; i < potentialWrdLst.size(); i++)
+    {
+      int letterNum = 0;
+      char letterChar = 'z';
+      String allWords;
+      allWords = potentialWrdLst.get(i);
+      for(int j = 0; j < allWords.length(); j++)
+      {
+        letterChar = allWords.charAt(j);
+        letterNum = letterChar;
+        newArr.add(letterNum);
+        //System.out.println(newArr);
+        //find cosine info and store into one array
+      }
+
+      denominator = Math.sqrt(Math.pow(newArr.get(0),2) +
+      Math.pow(newArr.get(1),2) + Math.pow(newArr.get(2),2) +
+      Math.pow(newArr.get(3),2) + Math.pow(newArr.get(4),2) );
+
+      numerator = newArr.get(0)*vectorA[0] + newArr.get(1)*vectorA[1] +
+      newArr.get(2)*vectorA[2] + newArr.get(3)*vectorA[3] + newArr.get(4)*vectorA[4];
+
+      cosVal = numerator/(denominator*vectorAlength);
+      //System.out.println("size compare is: " + i);
+      if(cosVal > maxVal)
+      {
+        maxVal = cosVal;
+        potentialWrdCount = i;
+        //System.out.println("size is: " + i);
+        //System.out.println("cosVal is: " + cosVal);
+        //System.out.println("word num in list is: " + i);
+      //System.out.println("similar word is: " + potentialWrdLst.get(i));
+
+
+      }
+
+      //System.out.println("cosVal is: " + cosVal);
+      //System.out.println("word num in list is: " + i);
+      //System.out.println("similar word is: " + potentialWrdLst.get(i));
+
+      newArr.clear();
+
+    }
+    maxVal = -2;
+
+    firstGuess = potentialWrdLst.get(potentialWrdCount);
+
+    //get chars at firstGuess
+
+    String zeroS = "" + firstGuess.charAt(0);
+    String oneS = "" + firstGuess.charAt(1);
+    String twoS = "" + firstGuess.charAt(2);
+    String threeS = "" + firstGuess.charAt(3);
+    String fourS = "" + firstGuess.charAt(4);
+
     //generate random number
+
+    if(tempGuess2.contains(zeroS) ||
+    tempGuess2.contains(fourS) )
+    {
+    newRandInt = rand.nextInt(winningWords.size());
+    newRandStr = winningWords.get(newRandInt);
+    System.out.println("random number is: " + newRandInt);
+    //if randomword equals previous guess pick another random word
+    if(newRandStr == firstGuess)
+    {
+      newRandInt = rand.nextInt(winningWords.size());
+      newRandStr = winningWords.get(newRandInt);
+    }
+    System.out.println("next guess is: " + newRandStr);
+
+    firstGuess = newRandStr;
+
+
+    if(potentialWrdLst.contains(firstGuess) == false)
+    {
+      newRandInt = rand.nextInt(potentialWrdLst.size());
+      newRandStr = potentialWrdLst.get(newRandInt);
+      System.out.println("random number is: " + newRandInt);
+      //if randomword equals previous guess pick another random word
+      if(newRandStr == firstGuess)
+      {
+        newRandInt = rand.nextInt(potentialWrdLst.size());
+        newRandStr = potentialWrdLst.get(newRandInt);
+      }
+      System.out.println("next guess is: " + newRandStr);
+
+      firstGuess = newRandStr;
+    }
+    }
+    tempGuess2 = firstGuess;
+
+
+    //end
+    //add guesses to list
+    winningWords.add(firstGuess);
+
+
+    /* different letter guessr
+    if (guessCount == 1)
+    {
+      firstGuess = "brick";
+    }
+    else if (guessCount == 2)
+    {
+      firstGuess = "glent";
+    }
+    else if (guessCount == 3)
+    {
+      firstGuess = "jumpy";
+    }
+    else if (guessCount == 4)
+    {
+      firstGuess = "waqfs";
+    }
+    else if (guessCount == 5)
+    {
+      firstGuess = "vozhd";
+    }
+    else{
+      newRandInt = rand.nextInt(potentialWrdLst.size());
+      newRandStr = potentialWrdLst.get(newRandInt);
+      System.out.println("random number is: " + newRandInt);
+      //if randomword equals previous guess pick another random word
+      if(newRandStr == firstGuess)
+      {
+        newRandInt = rand.nextInt(potentialWrdLst.size());
+        newRandStr = potentialWrdLst.get(newRandInt);
+      }
+      System.out.println("next guess is: " + newRandStr);
+
+      firstGuess = newRandStr;
+      System.out.println("number of words left: " + potentialWrdLst.size());
+    }
+    */
+
+    //random guesser
+    /*
     newRandInt = rand.nextInt(potentialWrdLst.size());
     newRandStr = potentialWrdLst.get(newRandInt);
     System.out.println("random number is: " + newRandInt);
     //if randomword equals previous guess pick another random word
-    while(newRandStr == firstGuess)
+    if(newRandStr == firstGuess)
     {
       newRandInt = rand.nextInt(potentialWrdLst.size());
       newRandStr = potentialWrdLst.get(newRandInt);
@@ -159,6 +550,18 @@ public class naive1_2{
     System.out.println("next guess is: " + newRandStr);
 
     firstGuess = newRandStr;
+    System.out.println("number of words left: " + potentialWrdLst.size());
+    */
+
+    //System.out.println(" highest cosVal is: " + cosVal);
+    //System.out.println("word num in list is: " + potentialWrdCount);
+    System.out.println("most similar word is: " + firstGuess);
+
+    //TODO: Implement max cos val and 5 unique letters and 5 different letters
+
+
+  // end of while loop }
+
     //removes guess from list, so the random doesn't pick it again
       for(int l = 0; l < potentialWrdLst.size(); l++)
       {
@@ -167,26 +570,85 @@ public class naive1_2{
           potentialWrdLst.remove(l);
         }
       }
+
+      System.out.println("number of words left: " + potentialWrdLst.size());
     }
+    if(normCount >= numOfRuns/2)
+    {
+      avgGuessCount += guessCount;
+    }
+
     //print number of algorithm runs it took to solve the wordle simulation
+
+    //TODO find percent for each category 1,2,3,4,5 as well!!!
     System.out.println("wordle solved in " + guessCount + " guesses!!!!!!");
-    if(guessCount <= 6)
+    if(guessCount <= 6 && normCount >= numOfRuns/2) //&& normCount == numOfRuns/2)
     {
       numOfSixes++;
-      percentSix = (numOfSixes/numOfRuns) * 100;
+      percentSix = (numOfSixes/(numOfRuns/2)) * 100;
       intRandCount += newRandInt;
       randCounter++;
       percentRands = (intRandCount/randCounter);
 
     }
+
+    if(guessCount > 6)
+    {
+      for(int i = 1; i <= guessCount; i++ )
+      {
+        winningWords.remove(winningWords.size()-1);
+      }
+    }
+    else
+    {
+      System.out.println("List of elements: "+winningWords);
+      System.out.println("\nCount all with frequency:");
+      Set<String> uniqueSet = new HashSet<String>(winningWords);
+      for (String i : uniqueSet) {
+      System.out.print(i + ": " + Collections.frequency(winningWords, i) + " ");
+      }
+    }
+
+
+
+
     System.out.println("num of runs less than or equal to six: " + numOfSixes);
     System.out.println("percent of runs less than or equal to six: " + percentSix);
-    guessCount = 1;
+    guessCount = 0;
 
     System.out.println("random number average: " + percentRands);
     System.out.println("randCounter: " + randCounter);
     System.out.println("intRandCount: " + intRandCount);
-  }
+    System.out.println("average guess count is: " + avgGuessCount/numOfRuns);
+}
 
     }
+
+    public static int getMode(ArrayList<Integer> arrList)
+    {
+    int mode = arrList.get(0);
+    int maxOccurence = 1;
+    int value = mode;
+    int count = 1;
+    for(int i = 1; i < arrList.size()-1; i++)
+    {
+    if(arrList.get(i) == value)//changed here..
+    {
+    count++;
     }
+    else
+    {
+    count = 1;
+    value = arrList.get(i);
+    }
+    if(count > maxOccurence)
+    {
+    mode = value;
+    maxOccurence = count;
+    }
+    }
+    return mode;
+    }
+
+
+  }
